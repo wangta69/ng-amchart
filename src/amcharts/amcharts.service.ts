@@ -1,18 +1,26 @@
 import { NgZone, Injectable } from '@angular/core';
 import { AmChart, AmEvent } from "./interfaces";
+import { ScriptService } from "./script/script.service";
 //import * as amcharts3 from 'amcharts3';//아래 것으로 대처
 // TODO better type for this
 declare const AmCharts: any;
 
 @Injectable()
 export class AmChartsService {
-  constructor(private zone: NgZone) {
+  constructor(private zone: NgZone, private script: ScriptService) {
 
-      console.log("AmChartsService start");
-      console.log(AmCharts);
-     // console.log(this.amcharts3);
+    this.script.load('amcharts').then(data => {
+        //console.log('script loaded ', data);
+        this.callnext();
+    }).catch(error => console.log(error));
+
   }
 
+  callnext(){
+      this.script.load( 'serial', 'pie', 'themes_light').then(data => {
+          //console.log('script loaded ', data);
+      }).catch(error => console.log(error));
+  }
 
 
   get baseHref(): boolean {
@@ -97,6 +105,8 @@ export class AmChartsService {
   // TODO is Node the correct type ?
   // TODO better type for config
   makeChart(id: string | Node, config: any, delay?: number): AmChart {
+    //if(typeof(AmCharts) == 'undefined')
+        //setTimeout(() => this.makeChart(id, config, delay), 250);
     return this.zone.runOutsideAngular(() => AmCharts.makeChart(id, config, delay));
   }
 

@@ -9,7 +9,8 @@ npm install ng-amchart
 Add amcharts.js to index.html
 ```
 <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script><!-- must be before amstock -->
+<script src="https://www.amcharts.com/lib/3/amstock.js"></script>
 <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
 ```
 ## How to use
@@ -28,11 +29,11 @@ import { AmChartModule } from "ng-amchart";
 import { AmChartsService } from "ng-amchart";
 export class myPage
 private chart:any;
-constructor( protected amchart:AmChartsService) {}
+constructor( protected amchartSvc:AmChartsService) {}
 
     ngAfterViewInit() {
 
-     this.chart = this.amchart.makeChart("chartdiv", {
+     this.chart = this.amchartSvc.makeChart("chartdiv", {
        "type": "serial",
        "theme": "light",
        "categoryField": "category",
@@ -61,4 +62,9 @@ constructor( protected amchart:AmChartsService) {}
      });
    }
 
+
+   ngOnDestroy() {
+     if (this.chart) {
+       this.amchartSvc.destroyChart(this.chart);
+     }
 ```

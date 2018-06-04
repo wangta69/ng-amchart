@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { AmChartsService } from "./amcharts.service";
 import { AmChartsDirective } from "./amcharts.directive";
-
+import { ScriptService } from "./script/script.service";
 
 //export { AmChartsService } from "./amcharts.service";
 
@@ -17,7 +17,7 @@ import { AmChartsDirective } from "./amcharts.directive";
     //AmChartsDirective,
   ],
   providers: [
-    AmChartsDirective, AmChartsService
+    ScriptService, AmChartsDirective, AmChartsService
   ]
 })
 export class AmChartModule {}
