@@ -1,10 +1,10 @@
 import { Component, Directive, ElementRef, Input, SimpleChanges, NgZone, NgModule, Injectable } from '@angular/core';
 import { copy, updateObject} from './functions';
-import { AmChartsService } from "./amcharts.service";
-import { AmChart } from "./interfaces";
+import { AmChartsService } from './amcharts.service';
+import { AmChart } from './interfaces';
 
-//import * as amcharts3 from 'amcharts3';//아래 것으로 대처
-//declare const AmCharts: any;
+// import * as amcharts3 from 'amcharts3';//아래 것으로 대처
+// declare const AmCharts: any;
 
 @Directive({
   selector: "amCharts"
