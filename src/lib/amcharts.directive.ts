@@ -1,4 +1,5 @@
-import { Component, Directive, ElementRef, Input, SimpleChanges, NgZone, NgModule, Injectable } from '@angular/core';
+import { Component, Directive, ElementRef, Input, SimpleChanges, NgZone, NgModule, Injectable,
+        OnChanges, OnDestroy, AfterViewInit } from '@angular/core';
 import { copy, updateObject} from './functions';
 import { AmChartsService } from './amcharts.service';
 import { AmChart } from './interfaces';
@@ -7,16 +8,17 @@ import { AmChart } from './interfaces';
 // declare const AmCharts: any;
 
 @Directive({
-  selector: "amCharts"
+  /* tslint:disable-next-line:directive-selector */
+  selector: 'amCharts'
 })
-export class AmChartsDirective {
+export class AmChartsDirective implements OnChanges, OnDestroy, AfterViewInit {
   @Input() id: string;
   @Input() options: any; // TODO better type for this
-  @Input() delay: number = 0;
+  @Input() delay = 0;
 
   private chart: AmChart;
 
-  constructor(private el: ElementRef,  private zone: NgZone, private amchartSvc: AmChartsService,) {}//private AmCharts: AmChartsService,
+  constructor(private el: ElementRef,  private zone: NgZone, private amchartSvc: AmChartsService) {}
 
   ngAfterViewInit() {
     // AmCharts mutates the config object, so we have to make a deep copy to prevent that
@@ -25,7 +27,7 @@ export class AmChartsDirective {
     const el = this.el.nativeElement;
 
     el.id = this.id;
-    el.style.display = "block";
+    el.style.display = 'block';
 
     this.chart = this.amchartSvc.makeChart(this.id, props, this.delay);
   }
@@ -43,7 +45,7 @@ export class AmChartsDirective {
       if (this.chart) {
         // This is needed to avoid triggering ngDoCheck
         this.zone.runOutsideAngular(() => {
-          var didUpdate = updateObject(this.chart, x.options.previousValue, x.options.currentValue);
+          const didUpdate = updateObject(this.chart, x.options.previousValue, x.options.currentValue);
 
           // TODO make this faster
           if (didUpdate) {

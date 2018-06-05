@@ -2,14 +2,14 @@
 // TODO what about regexps, etc. ?
 export function copy(x: any) {
   switch (getType(x)) {
-  case "[object Array]":
+  case '[object Array]':
     return copyArray(x);
 
-  case "[object Object]":
+  case '[object Object]':
     return copyObject(x);
 
   // TODO is this necessary ?
-  case "[object Date]":
+  case '[object Date]':
     return new Date(x.getTime());
 
   default:
@@ -18,16 +18,16 @@ export function copy(x: any) {
 }
 
 export function updateObject(chart: any, oldObj: any, newObj: any) {
-  var didUpdate = false;
+  let didUpdate = false;
 
   if (oldObj !== newObj) {
     // TODO use Object.keys ?
-    for (var key in newObj) {
+    for (const key in newObj) {
       if (hasOwnKey(newObj, key)) {
         // TODO make this faster ?
         if (hasOwnKey(oldObj, key)) {
           // TODO should this count as an update ?
-          if (key === "listeners") {
+          if (key === 'listeners') {
             // TODO make this faster ?
             removeChartListeners(chart, oldObj[key], newObj[key]);
           }
@@ -45,9 +45,9 @@ export function updateObject(chart: any, oldObj: any, newObj: any) {
     }
 
     // TODO use Object.keys ?
-    for (var key in oldObj) {
+    for (const key in oldObj) {
       if (hasOwnKey(oldObj, key) && !hasOwnKey(newObj, key)) {
-        if (key === "listeners") {
+        if (key === 'listeners') {
           removeChartListeners(chart, oldObj[key], []);
         }
 
@@ -67,11 +67,11 @@ function getType(x: any) {
 }
 
 function copyArray(x: any) {
-  var length = x.length;
+  const length = x.length;
 
-  var output = new Array(length);
+  const output = new Array(length);
 
-  for (var i = 0; i < length; ++i) {
+  for (let i = 0; i < length; ++i) {
     output[i] = copy(x[i]);
   }
 
@@ -80,10 +80,10 @@ function copyArray(x: any) {
 
 
 function copyObject(x: any) {
-  var output = {};
+  const output = {};
 
   // TODO use Object.keys ?
-  for (var key in x) {
+  for (const key in x) {
     if (hasOwnKey(x, key)) {
       output[key] = copy(x[key]);
     }
@@ -118,17 +118,17 @@ function removeChartListeners(chart: any, x: any, y: any) {
       y = [];
     }
 
-    var xLength = x.length;
-    var yLength = y.length;
+    const xLength = x.length;
+    const yLength = y.length;
 
-    for (var i = 0; i < xLength; ++i) {
-      var xValue = x[i];
+    for (let i = 0; i < xLength; ++i) {
+      const xValue = x[i];
 
-      var has = false;
+      let has = false;
 
       // TODO make this faster ?
-      for (var j = 0; j < yLength; ++j) {
-        var yValue = y[j];
+      for (let j = 0; j < yLength; ++j) {
+        const yValue = y[j];
 
         // TODO is this correct ?
         if (xValue.event  === yValue.event &&
@@ -147,27 +147,27 @@ function removeChartListeners(chart: any, x: any, y: any) {
 }
 
 function update(obj: any, key: any, x: any, y: any) {
-  var didUpdate = false;
+  let didUpdate = false;
 
   if (x !== y) {
-    var xType = getType(x);
-    var yType = getType(y);
+    const xType = getType(x);
+    const yType = getType(y);
 
     if (xType === yType) {
       switch (xType) {
-      case "[object Array]":
+      case '[object Array]':
         if (updateArray(obj[key], x, y)) {
           didUpdate = true;
         }
         break;
 
-      case "[object Object]":
+      case '[object Object]':
         if (updateObject(obj[key], x, y)) {
           didUpdate = true;
         }
         break;
 
-      case "[object Date]":
+      case '[object Date]':
         if (x.getTime() !== y.getTime()) {
           // TODO make this faster ?
           obj[key] = copy(y);
@@ -175,7 +175,7 @@ function update(obj: any, key: any, x: any, y: any) {
         }
         break;
 
-      case "[object Number]":
+      case '[object Number]':
         if (!isNumberEqual(x, y)) {
           // TODO is the copy necessary ?
           obj[key] = copy(y);
@@ -199,25 +199,22 @@ function update(obj: any, key: any, x: any, y: any) {
       didUpdate = true;
     }
   }
-
   return didUpdate;
 }
 
-
-
 function updateArray(a: any, x: any, y: any) {
-  var didUpdate = false;
+  let didUpdate = false;
 
   if (x !== y) {
-    var xLength = x.length;
-    var yLength = y.length;
+    const xLength = x.length;
+    const yLength = y.length;
 
     if (xLength !== yLength) {
       a.length = yLength;
       didUpdate = true;
     }
 
-    for (var i = 0; i < yLength; ++i) {
+    for (let i = 0; i < yLength; ++i) {
       if (i < xLength) {
         if (update(a, i, x[i], y[i])) {
           didUpdate = true;
